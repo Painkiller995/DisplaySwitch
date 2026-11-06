@@ -1,0 +1,173 @@
+<!--
+  DisplaySwitch design tokens. Every color, size and radius used by views comes from here.
+  Semantic names describe purpose ("Text.Secondary"), never appearance ("Grey60"), so themes can
+  change values without touching views. Contrast ratios noted are against the surface they sit on.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:design="using:DisplaySwitch.App.Design">
+
+  <!-- Typography: Inter on every platform for a consistent identity. Scale is a 1.2 ratio from 14. -->
+  <FontFamily x:Key="Font.UI">fonts:Inter#Inter, $Default</FontFamily>
+  <x:Double x:Key="Type.Display">28</x:Double>
+  <x:Double x:Key="Type.Title">20</x:Double>
+  <x:Double x:Key="Type.Subtitle">15</x:Double>
+  <x:Double x:Key="Type.Body">14</x:Double>
+  <x:Double x:Key="Type.Caption">12</x:Double>
+  <x:Double x:Key="Type.Overline">11</x:Double>
+
+  <!-- Shape: radii grow with component size so nested corners stay concentric. -->
+  <CornerRadius x:Key="Radius.Small">6</CornerRadius>
+  <CornerRadius x:Key="Radius.Control">8</CornerRadius>
+  <CornerRadius x:Key="Radius.Tile">12</CornerRadius>
+  <CornerRadius x:Key="Radius.Card">14</CornerRadius>
+  <CornerRadius x:Key="Radius.Sheet">18</CornerRadius>
+  <CornerRadius x:Key="Radius.Pill">999</CornerRadius>
+
+  <!-- Spacing scale (4-pt grid): 4, 8, 12, 16, 24, 32, 40. Layout margins use these values only. -->
+  <Thickness x:Key="Space.PagePadding">32,8,32,32</Thickness>
+  <Thickness x:Key="Space.CardPadding">16</Thickness>
+  <Thickness x:Key="Space.SectionPadding">20,16</Thickness>
+  <x:Double x:Key="Size.TitleBar">48</x:Double>
+  <x:Double x:Key="Size.InputCardWidth">184</x:Double>
+  <x:Double x:Key="Size.InputCardHeight">156</x:Double>
+  <!-- Three input cards and two 12 px gaps. -->
+  <x:Double x:Key="Size.ContentColumn">576</x:Double>
+  <x:Double x:Key="Size.IconTile">44</x:Double>
+  <x:Double x:Key="Size.MinTouchTarget">32</x:Double>
+
+  <ResourceDictionary.ThemeDictionaries>
+
+    <!-- ===================================== LIGHT ===================================== -->
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="Brush.Window" Color="#F3F3F7" />
+      <SolidColorBrush x:Key="Brush.WindowBackdrop" Color="#C8F3F3F7" />
+      <SolidColorBrush x:Key="Brush.Surface" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.SurfaceHover" Color="#FAFAFD" />
+      <SolidColorBrush x:Key="Brush.SurfacePressed" Color="#F1F1F6" />
+      <SolidColorBrush x:Key="Brush.SurfaceSunken" Color="#EBEBF1" />
+      <SolidColorBrush x:Key="Brush.SurfaceRaised" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Stroke" Color="#E3E3EA" />
+      <SolidColorBrush x:Key="Brush.StrokeStrong" Color="#C9C9D4" />
+      <SolidColorBrush x:Key="Brush.Text" Color="#17171C" />            <!-- 17.4:1 -->
+      <SolidColorBrush x:Key="Brush.TextSecondary" Color="#5E5E6E" />   <!-- 6.4:1 -->
+      <SolidColorBrush x:Key="Brush.TextTertiary" Color="#6E6E7C" />    <!-- 5.0:1 -->
+      <SolidColorBrush x:Key="Brush.TextOnAccent" Color="#FFFFFF" />    <!-- 5.6:1 on accent -->
+      <SolidColorBrush x:Key="Brush.Accent" Color="#5B4CF0" />
+      <SolidColorBrush x:Key="Brush.AccentHover" Color="#4F41DD" />
+      <SolidColorBrush x:Key="Brush.AccentPressed" Color="#4336C7" />
+      <SolidColorBrush x:Key="Brush.AccentSubtle" Color="#EEECFF" />
+      <SolidColorBrush x:Key="Brush.AccentText" Color="#4A3BDB" />      <!-- 6.6:1 -->
+      <SolidColorBrush x:Key="Brush.Success" Color="#16794A" />
+      <SolidColorBrush x:Key="Brush.SuccessSubtle" Color="#E5F4EC" />
+      <SolidColorBrush x:Key="Brush.Warning" Color="#8A5A00" />
+      <SolidColorBrush x:Key="Brush.WarningSubtle" Color="#FFF3D9" />
+      <SolidColorBrush x:Key="Brush.Danger" Color="#BE2B43" />
+      <SolidColorBrush x:Key="Brush.DangerSubtle" Color="#FDEBEE" />
+      <SolidColorBrush x:Key="Brush.Focus" Color="#5B4CF0" />
+      <SolidColorBrush x:Key="Brush.Scrim" Color="#66101018" />
+      <SolidColorBrush x:Key="Brush.Keycap" Color="#F1F1F6" />
+      <SolidColorBrush x:Key="Brush.KeycapStroke" Color="#D6D6DF" />
+
+      <!-- Monitor illustration -->
+      <SolidColorBrush x:Key="Brush.Bezel" Color="#1B1B22" />
+      <SolidColorBrush x:Key="Brush.Stand" Color="#C2C2CE" />
+      <SolidColorBrush x:Key="Brush.ScreenOff" Color="#24242D" />
+      <Color x:Key="Color.ScreenGlowCenter">#7E70FF</Color>
+      <Color x:Key="Color.ScreenGlowEdge">#1D1A3D</Color>
+
+      <BoxShadows x:Key="Elevation.Card">0 1 2 0 #0F000000, 0 2 8 0 #0A000000</BoxShadows>
+      <BoxShadows x:Key="Elevation.CardHover">0 2 4 0 #12000000, 0 10 24 -4 #1A1D1550</BoxShadows>
+      <BoxShadows x:Key="Elevation.Overlay">0 4 12 0 #14000000, 0 24 48 -8 #33000000</BoxShadows>
+      <BoxShadows x:Key="Elevation.Hero">0 18 40 -12 #4D1D1550</BoxShadows>
+    </ResourceDictionary>
+
+    <!-- ===================================== DARK ===================================== -->
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="Brush.Window" Color="#111115" />
+      <SolidColorBrush x:Key="Brush.WindowBackdrop" Color="#B0111115" />
+      <SolidColorBrush x:Key="Brush.Surface" Color="#1C1C22" />
+      <SolidColorBrush x:Key="Brush.SurfaceHover" Color="#23232A" />
+      <SolidColorBrush x:Key="Brush.SurfacePressed" Color="#19191E" />
+      <SolidColorBrush x:Key="Brush.SurfaceSunken" Color="#16161B" />
+      <SolidColorBrush x:Key="Brush.SurfaceRaised" Color="#232329" />
+      <SolidColorBrush x:Key="Brush.Stroke" Color="#2C2C35" />
+      <SolidColorBrush x:Key="Brush.StrokeStrong" Color="#3D3D48" />
+      <SolidColorBrush x:Key="Brush.Text" Color="#F3F3F6" />            <!-- 16.1:1 -->
+      <SolidColorBrush x:Key="Brush.TextSecondary" Color="#ABABB8" />   <!-- 7.5:1 -->
+      <SolidColorBrush x:Key="Brush.TextTertiary" Color="#8C8C99" />    <!-- 5.1:1 -->
+      <SolidColorBrush x:Key="Brush.TextOnAccent" Color="#14112B" />    <!-- 7.8:1 on accent -->
+      <SolidColorBrush x:Key="Brush.Accent" Color="#A99CFF" />
+      <SolidColorBrush x:Key="Brush.AccentHover" Color="#B8ADFF" />
+      <SolidColorBrush x:Key="Brush.AccentPressed" Color="#9384FF" />
+      <SolidColorBrush x:Key="Brush.AccentSubtle" Color="#25213F" />
+      <SolidColorBrush x:Key="Brush.AccentText" Color="#B9AEFF" />      <!-- 8.4:1 -->
+      <SolidColorBrush x:Key="Brush.Success" Color="#5BD69A" />
+      <SolidColorBrush x:Key="Brush.SuccessSubtle" Color="#13291E" />
+      <SolidColorBrush x:Key="Brush.Warning" Color="#F2C14E" />
+      <SolidColorBrush x:Key="Brush.WarningSubtle" Color="#2E240C" />
+      <SolidColorBrush x:Key="Brush.Danger" Color="#FF8597" />
+      <SolidColorBrush x:Key="Brush.DangerSubtle" Color="#351419" />
+      <SolidColorBrush x:Key="Brush.Focus" Color="#C7BFFF" />
+      <SolidColorBrush x:Key="Brush.Scrim" Color="#99000000" />
+      <SolidColorBrush x:Key="Brush.Keycap" Color="#2A2A32" />
+      <SolidColorBrush x:Key="Brush.KeycapStroke" Color="#3A3A45" />
+
+      <SolidColorBrush x:Key="Brush.Bezel" Color="#08080B" />
+      <SolidColorBrush x:Key="Brush.Stand" Color="#34343E" />
+      <SolidColorBrush x:Key="Brush.ScreenOff" Color="#15151A" />
+      <Color x:Key="Color.ScreenGlowCenter">#6C5CF0</Color>
+      <Color x:Key="Color.ScreenGlowEdge">#120F26</Color>
+
+      <BoxShadows x:Key="Elevation.Card">0 1 2 0 #40000000</BoxShadows>
+      <BoxShadows x:Key="Elevation.CardHover">0 2 4 0 #40000000, 0 12 28 -6 #73000000</BoxShadows>
+      <BoxShadows x:Key="Elevation.Overlay">0 8 16 0 #59000000, 0 28 56 -8 #80000000</BoxShadows>
+      <BoxShadows x:Key="Elevation.Hero">0 18 48 -12 #996C5CF0</BoxShadows>
+    </ResourceDictionary>
+
+    <!-- ================================ HIGH CONTRAST ================================= -->
+    <!-- Used when the OS requests high contrast. Pure black and white with a yellow focus, no translucency. -->
+    <ResourceDictionary x:Key="{x:Static design:AppThemes.HighContrast}">
+      <SolidColorBrush x:Key="Brush.Window" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.WindowBackdrop" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.Surface" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.SurfaceHover" Color="#1A1A1A" />
+      <SolidColorBrush x:Key="Brush.SurfacePressed" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.SurfaceSunken" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.SurfaceRaised" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.Stroke" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.StrokeStrong" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Text" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.TextSecondary" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.TextTertiary" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.TextOnAccent" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.Accent" Color="#FFFF00" />
+      <SolidColorBrush x:Key="Brush.AccentHover" Color="#FFFF00" />
+      <SolidColorBrush x:Key="Brush.AccentPressed" Color="#FFFF00" />
+      <SolidColorBrush x:Key="Brush.AccentSubtle" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.AccentText" Color="#FFFF00" />
+      <SolidColorBrush x:Key="Brush.Success" Color="#3FF23F" />
+      <SolidColorBrush x:Key="Brush.SuccessSubtle" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.Warning" Color="#FFFF00" />
+      <SolidColorBrush x:Key="Brush.WarningSubtle" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.Danger" Color="#FF6B6B" />
+      <SolidColorBrush x:Key="Brush.DangerSubtle" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.Focus" Color="#FFFF00" />
+      <SolidColorBrush x:Key="Brush.Scrim" Color="#CC000000" />
+      <SolidColorBrush x:Key="Brush.Keycap" Color="#000000" />
+      <SolidColorBrush x:Key="Brush.KeycapStroke" Color="#FFFFFF" />
+
+      <SolidColorBrush x:Key="Brush.Bezel" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Stand" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.ScreenOff" Color="#000000" />
+      <Color x:Key="Color.ScreenGlowCenter">#000000</Color>
+      <Color x:Key="Color.ScreenGlowEdge">#000000</Color>
+
+      <BoxShadows x:Key="Elevation.Card">0 0 0 0 Transparent</BoxShadows>
+      <BoxShadows x:Key="Elevation.CardHover">0 0 0 0 Transparent</BoxShadows>
+      <BoxShadows x:Key="Elevation.Overlay">0 0 0 0 Transparent</BoxShadows>
+      <BoxShadows x:Key="Elevation.Hero">0 0 0 0 Transparent</BoxShadows>
+    </ResourceDictionary>
+
+  </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DisplaySwitch.App/DisplaySwitch.App.csproj" />
+    <Project Path="src/DisplaySwitch.Core/DisplaySwitch.Core.csproj" />
+    <Project Path="src/DisplaySwitch.Platform/DisplaySwitch.Platform.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DisplaySwitch.App.Tests/DisplaySwitch.App.Tests.csproj" />
+    <Project Path="tests/DisplaySwitch.Core.Tests/DisplaySwitch.Core.Tests.csproj" />
+    <Project Path="tests/DisplaySwitch.TestSupport/DisplaySwitch.TestSupport.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/DisplaySwitch.IconGenerator/DisplaySwitch.IconGenerator.csproj" />
+  </Folder>
+</Solution>

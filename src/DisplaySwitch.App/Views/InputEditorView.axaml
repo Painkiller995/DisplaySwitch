@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DisplaySwitch.App.ViewModels"
+             xmlns:views="using:DisplaySwitch.App.Views"
+             xmlns:controls="using:DisplaySwitch.App.Controls"
+             xmlns:conv="using:DisplaySwitch.App.Converters"
+             x:Class="DisplaySwitch.App.Views.InputEditorView"
+             x:DataType="vm:InputEditorViewModel">
+  <Border Classes="sheet" Width="460" MaxHeight="640">
+    <Grid RowDefinitions="Auto,*,Auto">
+      <Grid ColumnDefinitions="*,Auto" Margin="24,20,16,8">
+        <StackPanel Spacing="2">
+          <TextBlock Classes="title" Text="{Binding Title}" />
+          <TextBlock Classes="caption" Text="{Binding MonitorName}" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="subtle icon" VerticalAlignment="Top" Command="{Binding CancelCommand}"
+                ToolTip.Tip="Close" AutomationProperties.Name="Close without saving">
+          <controls:Icon Data="{StaticResource Icon.Close}" />
+        </Button>
+      </Grid>
+
+      <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="24,8,24,16" Spacing="20">
+
+          <!-- New input: code entry and preview -->
+          <StackPanel Spacing="14" IsVisible="{Binding IsNew}">
+            <TextBlock Classes="paragraph" Text="Enter the input code your monitor uses. Test it first: the monitor shows that input for a few seconds, then returns automatically." />
+            <Grid ColumnDefinitions="*,12,*">
+              <StackPanel>
+                <TextBlock Classes="fieldLabel" Text="Input code" />
+                <TextBox x:Name="CodeBox" Text="{Binding CodeText}" PlaceholderText="e.g. 0x11 or 17" AutomationProperties.Name="Input code" />
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Classes="fieldLabel" Text="Port name (optional)" />
+                <TextBox Text="{Binding NewPortName}" PlaceholderText="e.g. USB-C" MaxLength="40" AutomationProperties.Name="Port name" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Text="{Binding CodeError}" Foreground="{DynamicResource Brush.Danger}" FontSize="{StaticResource Type.Caption}"
+                       IsVisible="{Binding CodeError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <Button Classes="secondary" Command="{Binding PreviewCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:Spinner Width="14" Height="14" IsVisible="{Binding IsPreviewing}" />
+                  <TextBlock Text="Test this code" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+            <TextBlock Classes="paragraph" Text="{Binding PreviewStatus}" AutomationProperties.LiveSetting="Polite"
+                       IsVisible="{Binding PreviewStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <Border Classes="divider" />
+          </StackPanel>
+
+          <StackPanel>
+            <TextBlock Classes="fieldLabel" Text="Name" />
+            <TextBox x:Name="NameBox" Text="{Binding Label}" PlaceholderText="{Binding PortName, TargetNullValue='e.g. Work laptop'}" MaxLength="40"
+                     AutomationProperties.Name="Name for this input" />
+            <TextBlock Classes="caption" Margin="0,6,0,0" Text="{Binding CodeCaption}" IsVisible="{Binding !IsNew}" />
+          </StackPanel>
+
+          <StackPanel>
+            <TextBlock Classes="fieldLabel" Text="Icon" />
+            <ItemsControl ItemsSource="{Binding IconChoices}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel ItemSpacing="8" LineSpacing="8" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:IconChoiceViewModel">
+                  <RadioButton Classes="iconChoice" GroupName="InputIcon" IsChecked="{Binding IsSelected}"
+                               ToolTip.Tip="{Binding Name}" AutomationProperties.Name="{Binding Name}">
+                    <controls:Icon Data="{Binding Icon, Converter={x:Static conv:IconConverters.ForInput}}" Width="22" Height="22" />
+                  </RadioButton>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <StackPanel IsVisible="{Binding ShortcutsSupported}">
+            <TextBlock Classes="fieldLabel" Text="Global shortcut" />
+            <Grid ColumnDefinitions="*,Auto">
+              <controls:ShortcutRecorder x:Name="Recorder" Classes="secondary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="38"
+                                         AutomationProperties.Name="Shortcut. Focus this field and press a key combination."
+                                         AutomationProperties.HelpText="Use Ctrl, Alt or the Windows key with a letter, number or function key">
+                <Panel>
+                  <TextBlock Classes="secondary" Text="Click, then press keys" IsVisible="{Binding !HasShortcut}" VerticalAlignment="Center" />
+                  <views:Keycaps ItemsSource="{Binding ShortcutParts}" IsVisible="{Binding HasShortcut}" />
+                </Panel>
+              </controls:ShortcutRecorder>
+              <Button Grid.Column="1" Classes="subtle" Margin="8,0,0,0" Content="Clear" Command="{Binding ClearShortcutCommand}" IsVisible="{Binding HasShortcut}" />
+            </Grid>
+            <TextBlock Margin="0,6,0,0" Text="{Binding ShortcutWarning}" Foreground="{DynamicResource Brush.Warning}" FontSize="{StaticResource Type.Caption}"
+                       TextWrapping="Wrap" IsVisible="{Binding ShortcutWarning, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2">
+              <TextBlock Text="Show on the main screen" FontWeight="Medium" />
+              <TextBlock Classes="caption" Text="Hidden inputs keep their shortcut." />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding IsShownOnHome}" OnContent="" OffContent="" MinWidth="0"
+                          AutomationProperties.Name="Show on the main screen" />
+          </Grid>
+        </StackPanel>
+      </ScrollViewer>
+
+      <Border Grid.Row="2" BorderBrush="{DynamicResource Brush.Stroke}" BorderThickness="0,1,0,0" Padding="24,14">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+          <Button Classes="subtle" Content="Remove input" Foreground="{DynamicResource Brush.Danger}" Command="{Binding DeleteCommand}" IsVisible="{Binding CanDelete}" />
+          <Button Grid.Column="2" Classes="secondary" Content="Cancel" Command="{Binding CancelCommand}" Margin="0,0,10,0" />
+          <Button Grid.Column="3" Classes="primary" Content="Save" Command="{Binding SaveCommand}" IsDefault="True" />
+        </Grid>
+      </Border>
+    </Grid>
+  </Border>
+</UserControl>

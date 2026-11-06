@@ -1,0 +1,19 @@
+<!-- Renders a shortcut such as Ctrl+Alt+1 as a row of keycaps. Decorative: parents carry the spoken text. -->
+<ItemsControl xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              x:Class="DisplaySwitch.App.Views.Keycaps"
+              x:DataType="x:String"
+              AutomationProperties.AccessibilityView="Raw">
+  <ItemsControl.ItemsPanel>
+    <ItemsPanelTemplate>
+      <StackPanel Orientation="Horizontal" Spacing="3" />
+    </ItemsPanelTemplate>
+  </ItemsControl.ItemsPanel>
+  <ItemsControl.ItemTemplate>
+    <DataTemplate x:DataType="x:String">
+      <Border Classes="keycap">
+        <TextBlock Text="{Binding}" />
+      </Border>
+    </DataTemplate>
+  </ItemsControl.ItemTemplate>
+</ItemsControl>

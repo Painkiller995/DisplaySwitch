@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=DisplaySwitch
+GenericName=Monitor Input Switcher
+Comment=Switch your monitor's input from your desktop
+Exec=DisplaySwitch
+Icon=displayswitch
+Terminal=false
+Categories=Utility;Settings;HardwareSettings;
+Keywords=monitor;display;input;hdmi;displayport;ddc;
+StartupWMClass=DisplaySwitch
