@@ -40,7 +40,7 @@ jobs:
         if: always() && env.SIGNING_CERT_BASE64 != ''
         shell: pwsh
         run: Remove-Item (Join-Path $env:RUNNER_TEMP 'signing.pfx') -Force -ErrorAction SilentlyContinue
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packages-windows
           path: artifacts/installer/*
@@ -57,7 +57,7 @@ jobs:
         with:
           global-json-file: global.json
       - run: bash packaging/linux/build.sh ${{ matrix.rid }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packages-${{ matrix.rid }}
           path: artifacts/installer/*
@@ -74,7 +74,7 @@ jobs:
         with:
           global-json-file: global.json
       - run: bash packaging/macos/build.sh ${{ matrix.rid }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packages-${{ matrix.rid }}
           path: artifacts/installer/*
