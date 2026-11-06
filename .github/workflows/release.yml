@@ -54,7 +54,7 @@ jobs:
       TAG: ${{ github.ref_type == 'tag' && github.ref_name || needs.release-please.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: packages-*
           path: dist
