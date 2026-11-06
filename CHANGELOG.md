@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2 — 2026-11-06
+
+### Features
+
+- Brightness and color temperature sliders in the main window, and brightness in the tray quick switcher. Every change is read back from the monitor; if it is ignored or fails, the slider returns to the monitor's value and the app explains why.
+- Color temperature is shown in Kelvin when the monitor reports its scale, otherwise as warm, neutral or cool.
+
+### Bug fixes
+
+- The input cards no longer shift sideways when a long message appears below them.
+
 ## 1.0.1 — 2026-11-05
 
 ### Bug fixes
