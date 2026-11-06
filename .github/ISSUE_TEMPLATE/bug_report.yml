@@ -1,0 +1,39 @@
+name: Bug report
+description: Something doesn't work as expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: DisplaySwitch version
+      description: Shown in Settings › About.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Windows 11, Windows 10, macOS, Linux (X11), Linux (Wayland)]
+    validations:
+      required: true
+  - type: input
+    id: monitor
+    attributes:
+      label: Monitor model and connection
+      placeholder: "Samsung C49J89x over DisplayPort"
+  - type: textarea
+    id: log
+    attributes:
+      label: Log excerpt
+      description: >
+        Settings › About › Logs opens the log folder. Paste only the relevant lines. Logs contain monitor
+        model IDs and DDC results, not personal data, but please check before posting.
+      render: text

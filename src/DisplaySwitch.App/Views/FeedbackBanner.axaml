@@ -1,0 +1,41 @@
+<!--
+  Status banner for switch results and notices. It is a polite live region, so screen readers
+  announce new feedback without moving focus.
+-->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DisplaySwitch.App.ViewModels"
+             xmlns:controls="using:DisplaySwitch.App.Controls"
+             xmlns:conv="using:DisplaySwitch.App.Converters"
+             x:Class="DisplaySwitch.App.Views.FeedbackBanner"
+             x:DataType="vm:FeedbackViewModel"
+             IsVisible="{Binding IsVisible}">
+  <Border Classes="banner"
+          Classes.success="{Binding Current.IsSuccess, FallbackValue=False}"
+          Classes.warning="{Binding Current.IsWarning, FallbackValue=False}"
+          Classes.error="{Binding Current.IsError, FallbackValue=False}"
+          AutomationProperties.LiveSetting="Polite"
+          AutomationProperties.Name="{Binding Current.Title, FallbackValue=''}">
+    <Grid ColumnDefinitions="Auto,*,Auto">
+      <Panel Width="20" Height="20" VerticalAlignment="Top" Margin="0,1,12,0">
+        <controls:Icon Data="{Binding Current.Kind, Converter={x:Static conv:IconConverters.ForFeedback}, FallbackValue={x:Null}}"
+                       IsVisible="{Binding !Current.IsProgress, FallbackValue=False}" Width="20" Height="20" />
+        <controls:Spinner IsVisible="{Binding Current.IsProgress, FallbackValue=False}" Width="18" Height="18" />
+      </Panel>
+      <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+        <TextBlock Text="{Binding Current.Title, FallbackValue=''}" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock Classes="bannerMessage" Text="{Binding Current.Message, FallbackValue=''}"
+                   IsVisible="{Binding Current.Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}, FallbackValue=False}"
+                   TextWrapping="Wrap" FontSize="{StaticResource Type.Caption}" LineHeight="18" Opacity="0.86" />
+      </StackPanel>
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Top" Margin="12,-4,-6,-4">
+        <Button Classes="link" Content="Try again" Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}" />
+        <Button Classes="subtle icon" Width="28" Height="28" MinHeight="28" Command="{Binding DismissCommand}"
+                IsVisible="{Binding !Current.IsProgress, FallbackValue=False}"
+                ToolTip.Tip="Dismiss" AutomationProperties.Name="Dismiss message">
+          <controls:Icon Data="{StaticResource Icon.Close}" Width="14" Height="14" />
+        </Button>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

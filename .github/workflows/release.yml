@@ -1,0 +1,89 @@
+name: Release
+
+# Push to main: Release Please maintains the release PR; merging it creates the release.
+# Push of a v* tag: publishes that version with notes from CHANGELOG.md.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # always() is required because release-please is skipped on tag pushes.
+  verify:
+    needs: release-please
+    if: always() && (github.ref_type == 'tag' || needs.release-please.outputs.release_created == 'true')
+    uses: ./.github/workflows/ci.yml
+
+  package:
+    needs: verify
+    if: always() && needs.verify.result == 'success'
+    uses: ./.github/workflows/package.yml
+    secrets: inherit
+
+  publish:
+    needs: [release-please, package]
+    if: always() && needs.package.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_type == 'tag' && github.ref_name || needs.release-please.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: packages-*
+          path: dist
+          merge-multiple: true
+      - name: Check tag matches version.txt
+        run: |
+          expected="v$(tr -d '[:space:]' < version.txt)"
+          if [ "$TAG" != "$expected" ]; then
+            echo "::error::Tag $TAG does not match version.txt ($expected)."
+            exit 1
+          fi
+      - name: Publish release
+        run: |
+          version="${TAG#v}"
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            # Literal match; handles "## 1.0.0 — date" and "## [1.1.0](url) (date)".
+            awk -v v="$version" '
+              /^## / {
+                if (found) exit
+                heading = substr($0, 4); sub(/^\[/, "", heading)
+                if (index(heading, v " ") == 1 || index(heading, v "]") == 1) { found = 1; next }
+              }
+              found { print }
+            ' CHANGELOG.md > notes.md
+            [ -s notes.md ] || echo "See CHANGELOG.md." > notes.md
+            prerelease=""
+            case "$version" in *-*) prerelease="--prerelease" ;; esac
+            gh release create "$TAG" dist/* --verify-tag --title "DisplaySwitch $version" --notes-file notes.md $prerelease
+          fi
+          echo "Published https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG" >> "$GITHUB_STEP_SUMMARY"

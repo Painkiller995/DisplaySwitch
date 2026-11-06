@@ -1,0 +1,58 @@
+name: Monitor compatibility report
+description: Tell us how DisplaySwitch works with your monitor. These reports are the project's most valuable contributions.
+labels: [hardware]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use **Add input › Test this code** to try codes safely: the monitor returns to the current input automatically.
+        Please don't include monitor serial numbers.
+  - type: input
+    id: model
+    attributes:
+      label: Monitor model
+      placeholder: "Samsung LC49J890DKRXEN"
+    validations:
+      required: true
+  - type: input
+    id: hardware-id
+    attributes:
+      label: Hardware ID
+      description: Three letters and four hex digits, from Settings › Monitors › Technical details or the log.
+      placeholder: "SAM0F21"
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Monitor firmware (if known)
+  - type: dropdown
+    id: connection
+    attributes:
+      label: How is this computer connected?
+      options: [DisplayPort, HDMI, USB-C / Thunderbolt, Through a dock or KVM, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Windows, macOS (Apple silicon), macOS (Intel), Linux]
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Input codes tested
+      description: For each input, the code you wrote, whether the monitor switched, and what the monitor reports while on it.
+      placeholder: |
+        HDMI 1: wrote 0x11 → switched ✅, reports 0x05
+        USB-C:  wrote 0x1B → ignored ❌
+    validations:
+      required: true
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Capabilities string
+      description: From Settings › Monitors › Technical details.
+      render: text

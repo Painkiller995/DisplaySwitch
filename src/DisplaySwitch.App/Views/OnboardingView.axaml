@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DisplaySwitch.App.ViewModels"
+             xmlns:controls="using:DisplaySwitch.App.Controls"
+             xmlns:conv="using:DisplaySwitch.App.Converters"
+             x:Class="DisplaySwitch.App.Views.OnboardingView"
+             x:DataType="vm:OnboardingViewModel">
+  <Grid RowDefinitions="*,Auto" MaxWidth="560" Margin="32,8,32,28">
+
+    <!-- ================= Step 1: Welcome ================= -->
+    <StackPanel IsVisible="{Binding IsWelcome}" VerticalAlignment="Center" Spacing="14">
+      <Border Classes="logoBadge" Width="72" Height="72" CornerRadius="20" HorizontalAlignment="Center" BoxShadow="{DynamicResource Elevation.Hero}">
+        <controls:Icon Data="{StaticResource Icon.Logo}" Width="40" Height="40" Foreground="White" StrokeThickness="1.7" />
+      </Border>
+      <TextBlock Classes="display" Text="Switch inputs, not cables" HorizontalAlignment="Center" Margin="0,14,0,0" />
+      <TextBlock Classes="paragraph" TextAlignment="Center" MaxWidth="440" HorizontalAlignment="Center"
+                 Text="DisplaySwitch changes your monitor's input from this computer: one click, or a keyboard shortcut from anywhere. No more reaching for the buttons on the back." />
+      <StackPanel Spacing="10" Margin="0,18,0,0" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <controls:Icon Data="{StaticResource Icon.Check}" Width="16" Height="16" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Classes="secondary" Text="Finds your monitors automatically" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <controls:Icon Data="{StaticResource Icon.Check}" Width="16" Height="16" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Classes="secondary" Text="Name each input after the device on it" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <controls:Icon Data="{StaticResource Icon.Check}" Width="16" Height="16" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Classes="secondary" Text="Tells you honestly whether the monitor switched" />
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+
+    <!-- ================= Step 2: Monitors ================= -->
+    <StackPanel IsVisible="{Binding IsMonitors}" VerticalAlignment="Center" Spacing="16">
+      <TextBlock Classes="overline" Text="STEP 2 OF 3" />
+      <TextBlock Classes="display" Text="Your monitors" />
+      <StackPanel IsVisible="{Binding Workspace.IsScanning}" Orientation="Horizontal" Spacing="10">
+        <controls:Spinner Width="18" Height="18" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding Workspace.IsScanning}" />
+        <TextBlock Classes="secondary" Text="Looking for monitors. This can take a few seconds the first time…" />
+      </StackPanel>
+      <TextBlock Classes="paragraph" IsVisible="{Binding Workspace.ShowEmptyState}"
+                 Text="No monitors answered. Turn on DDC/CI in your monitor's on-screen menu, then continue. You can search again from Settings at any time." />
+      <ItemsControl ItemsSource="{Binding Workspace.Monitors}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Spacing="10" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:MonitorViewModel">
+            <Border Classes="section" Padding="16,14">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Classes="iconTile">
+                  <controls:Icon Data="{StaticResource Icon.Desktop}" Width="22" Height="22" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="14,0" VerticalAlignment="Center" Spacing="2">
+                  <TextBlock Classes="subtitle" Text="{Binding DisplayName}" />
+                  <TextBlock Classes="caption" Text="{Binding Details}" />
+                </StackPanel>
+                <Border Grid.Column="2" Classes="liveChip" IsVisible="{Binding IsControllable}" VerticalAlignment="Center">
+                  <TextBlock Text="Ready" FontSize="{StaticResource Type.Overline}" FontWeight="SemiBold" />
+                </Border>
+                <TextBlock Grid.Column="2" Classes="caption" Text="Not controllable" IsVisible="{Binding !IsControllable}" VerticalAlignment="Center" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+
+    <!-- ================= Step 3: Inputs ================= -->
+    <StackPanel IsVisible="{Binding IsInputs}" VerticalAlignment="Center" Spacing="16">
+      <TextBlock Classes="overline" Text="STEP 3 OF 3" />
+      <TextBlock Classes="display" Text="Name your inputs" />
+      <TextBlock Classes="paragraph" Text="Use the name of the device on each input, so you recognize it at a glance. You can change these later." />
+      <ItemsControl ItemsSource="{Binding Inputs}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Spacing="10" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:OnboardingInputViewModel">
+            <Grid ColumnDefinitions="96,*,Auto">
+              <TextBlock Classes="secondary" Text="{Binding PortName}" VerticalAlignment="Center" FontWeight="Medium" />
+              <TextBox Grid.Column="1" Text="{Binding Label}" PlaceholderText="e.g. Work laptop" MaxLength="40"
+                       AutomationProperties.Name="{Binding PortName, StringFormat='Name for {0}'}" />
+              <ComboBox Grid.Column="2" Margin="10,0,0,0" ItemsSource="{Binding IconChoices}" SelectedItem="{Binding SelectedIcon}" MinWidth="64" Height="36"
+                        AutomationProperties.Name="{Binding PortName, StringFormat='Icon for {0}'}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:IconOption">
+                    <StackPanel Orientation="Horizontal" Spacing="8" ToolTip.Tip="{Binding Name}">
+                      <controls:Icon Data="{Binding Icon, Converter={x:Static conv:IconConverters.ForInput}}" Width="18" Height="18" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <TextBlock Classes="caption" IsVisible="{Binding ShortcutsSupported}"
+                 Text="Shortcuts Ctrl+Alt+1, Ctrl+Alt+2… will be assigned in this order. You can change them on each input." TextWrapping="Wrap" />
+    </StackPanel>
+
+    <!-- ================= Footer ================= -->
+    <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,24,0,0">
+      <Button Classes="subtle" Content="Skip setup" Command="{Binding SkipCommand}" Margin="-10,0,0,0" />
+      <Button Grid.Column="2" Classes="secondary" Content="Back" Command="{Binding BackCommand}" IsVisible="{Binding !IsWelcome}" Margin="0,0,10,0" />
+      <Button Grid.Column="3" Classes="primary" Command="{Binding ContinueCommand}" IsDefault="True">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="{Binding PrimaryActionLabel}" />
+          <controls:Icon Data="{StaticResource Icon.Forward}" Width="14" Height="14" StrokeThickness="2" />
+        </StackPanel>
+      </Button>
+    </Grid>
+  </Grid>
+</UserControl>

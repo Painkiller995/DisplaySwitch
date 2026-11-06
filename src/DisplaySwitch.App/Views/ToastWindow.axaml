@@ -1,0 +1,24 @@
+<!--
+  A brief on-screen confirmation for switches started by a global shortcut while the main window
+  is hidden. It never takes focus and disappears by itself.
+-->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DisplaySwitch.App.ViewModels"
+        xmlns:controls="using:DisplaySwitch.App.Controls"
+        xmlns:conv="using:DisplaySwitch.App.Converters"
+        x:Class="DisplaySwitch.App.Views.ToastWindow"
+        x:DataType="vm:Feedback"
+        Title="DisplaySwitch"
+        SizeToContent="WidthAndHeight" MaxWidth="460"
+        WindowDecorations="None" CanResize="False" ShowInTaskbar="False" Topmost="True" ShowActivated="False"
+        TransparencyLevelHint="Transparent" Background="Transparent">
+  <Border Classes="sheet" Margin="16" Padding="16,12" CornerRadius="{StaticResource Radius.Pill}"
+          AutomationProperties.LiveSetting="Polite" AutomationProperties.Name="{Binding Title}">
+    <StackPanel Orientation="Horizontal" Spacing="12">
+      <controls:Icon Data="{Binding Kind, Converter={x:Static conv:IconConverters.ForFeedback}}" Width="20" Height="20"
+                     Foreground="{DynamicResource Brush.AccentText}" />
+      <TextBlock Text="{Binding Title}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+    </StackPanel>
+  </Border>
+</Window>

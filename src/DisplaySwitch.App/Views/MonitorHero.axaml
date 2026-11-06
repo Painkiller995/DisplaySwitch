@@ -1,0 +1,50 @@
+<!--
+  The monitor illustration: drawn at the monitor's real aspect ratio, with the active input shown
+  on its "screen". Decorative for assistive technology; the same facts appear as text elsewhere.
+-->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DisplaySwitch.App.ViewModels"
+             xmlns:controls="using:DisplaySwitch.App.Controls"
+             xmlns:conv="using:DisplaySwitch.App.Converters"
+             x:Class="DisplaySwitch.App.Views.MonitorHero"
+             x:DataType="vm:MonitorViewModel"
+             AutomationProperties.AccessibilityView="Raw">
+  <StackPanel>
+    <controls:AspectRatioPanel Ratio="{Binding AspectRatio}" MaxWidth="600" MaxHeight="236">
+      <Border Background="{DynamicResource Brush.Bezel}" CornerRadius="16" Padding="7" BoxShadow="{DynamicResource Elevation.Hero}">
+        <Border CornerRadius="10" ClipToBounds="True" Background="{DynamicResource Brush.ScreenOff}">
+          <Panel>
+            <Border IsVisible="{Binding HasActiveInput}">
+              <Border.Background>
+                <RadialGradientBrush Center="50%,30%" GradientOrigin="50%,30%" RadiusX="65%" RadiusY="110%">
+                  <GradientStop Offset="0" Color="{DynamicResource Color.ScreenGlowCenter}" />
+                  <GradientStop Offset="1" Color="{DynamicResource Color.ScreenGlowEdge}" />
+                </RadialGradientBrush>
+              </Border.Background>
+            </Border>
+            <!-- Subtle glass reflection across the top of the panel -->
+            <Border Height="40" VerticalAlignment="Top" Opacity="0.08" IsHitTestVisible="False">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Offset="0" Color="White" />
+                  <GradientStop Offset="1" Color="Transparent" />
+                </LinearGradientBrush>
+              </Border.Background>
+            </Border>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6">
+              <controls:Icon Data="{Binding ActiveIcon, Converter={x:Static conv:IconConverters.ForInput}}"
+                             Width="32" Height="32" StrokeThickness="1.5" Foreground="#F5F5FF" HorizontalAlignment="Center" />
+              <TextBlock Text="{Binding ActiveTitle}" Foreground="#FFFFFF" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+              <TextBlock Text="{Binding ActiveCaption}" Foreground="#B8B8D6" FontSize="{StaticResource Type.Caption}" HorizontalAlignment="Center"
+                         IsVisible="{Binding ActiveCaption, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
+          </Panel>
+        </Border>
+      </Border>
+    </controls:AspectRatioPanel>
+    <!-- Stand: neck and foot -->
+    <Border Width="40" Height="16" Background="{DynamicResource Brush.Stand}" HorizontalAlignment="Center" CornerRadius="0,0,3,3" Opacity="0.9" />
+    <Border Width="132" Height="5" Background="{DynamicResource Brush.Stand}" HorizontalAlignment="Center" CornerRadius="3" />
+  </StackPanel>
+</UserControl>

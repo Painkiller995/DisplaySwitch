@@ -1,0 +1,97 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DisplaySwitch.App.ViewModels"
+        xmlns:views="using:DisplaySwitch.App.Views"
+        xmlns:controls="using:DisplaySwitch.App.Controls"
+        x:Class="DisplaySwitch.App.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="DisplaySwitch"
+        Icon="/Assets/displayswitch.ico"
+        Width="900" Height="680" MinWidth="560" MinHeight="520"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="{StaticResource Size.TitleBar}"
+        TransparencyLevelHint="Mica, None"
+        Background="{DynamicResource Brush.Window}">
+  <Window.Styles>
+    <Style Selector="ListBox.monitorPicker ListBoxItem">
+      <Setter Property="Padding" Value="12,5" />
+      <Setter Property="MinHeight" Value="30" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Margin" Value="0,0,2,0" />
+    </Style>
+    <Style Selector="ListBox.monitorPicker ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+      <Setter Property="BoxShadow" Value="{DynamicResource Elevation.Card}" />
+    </Style>
+    <!-- Interactive title-bar content must opt out of the native drag area. -->
+    <Style Selector="Grid#TitleBar Button, Grid#TitleBar ListBox">
+      <Setter Property="WindowDecorationProperties.ElementRole" Value="User" />
+    </Style>
+    <Style Selector="Button.icon.selectedPage">
+      <Setter Property="Background" Value="{DynamicResource Brush.SurfacePressed}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+  </Window.Styles>
+
+  <Grid RowDefinitions="Auto,*">
+    <!-- ================= Title bar ================= -->
+    <Grid x:Name="TitleBar" Height="{StaticResource Size.TitleBar}" ColumnDefinitions="Auto,Auto,*,Auto" Background="Transparent"
+          WindowDecorationProperties.ElementRole="TitleBar">
+      <Button Classes="subtle icon" Margin="10,0,0,0" Command="{Binding GoHomeCommand}" IsVisible="{Binding IsSettings}"
+              ToolTip.Tip="Back" AutomationProperties.Name="Back to inputs" HotKey="Escape">
+        <controls:Icon Data="{StaticResource Icon.Back}" />
+      </Button>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="16,0,16,0" VerticalAlignment="Center" IsHitTestVisible="False">
+        <Border Classes="logoBadge" Width="22" Height="22" CornerRadius="6">
+          <controls:Icon Data="{StaticResource Icon.Logo}" Width="15" Height="15" Foreground="White" StrokeThickness="2" />
+        </Border>
+        <TextBlock Text="DisplaySwitch" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+      </StackPanel>
+
+      <Border Grid.Column="2" Classes="segmented" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="2"
+              IsVisible="{Binding Workspace.HasMultipleMonitors}">
+        <ListBox Classes="monitorPicker" ItemsSource="{Binding Workspace.Monitors}" SelectedItem="{Binding Workspace.SelectedMonitor}"
+                 Background="Transparent" AutomationProperties.Name="Monitor">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:MonitorViewModel">
+              <TextBlock Text="{Binding DisplayName}" FontSize="{StaticResource Type.Caption}" FontWeight="Medium" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Border>
+
+      <StackPanel x:Name="TitleBarActions" Grid.Column="3" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center" IsVisible="{Binding !IsOnboarding}">
+        <Button Classes="subtle icon" Command="{Binding Workspace.RefreshCommand}" IsVisible="{Binding IsHome}"
+                ToolTip.Tip="Refresh (F5)" AutomationProperties.Name="Refresh monitors" HotKey="F5">
+          <Panel>
+            <controls:Icon Data="{StaticResource Icon.Refresh}" IsVisible="{Binding !Workspace.IsScanning}" />
+            <controls:Spinner Width="16" Height="16" IsVisible="{Binding Workspace.IsScanning}" />
+          </Panel>
+        </Button>
+        <Button Classes="subtle icon" Classes.selectedPage="{Binding IsSettings}" Command="{Binding OpenSettingsCommand}"
+                ToolTip.Tip="Settings" AutomationProperties.Name="Settings">
+          <controls:Icon Data="{StaticResource Icon.Settings}" />
+        </Button>
+      </StackPanel>
+    </Grid>
+
+    <!-- ================= Pages ================= -->
+    <Panel Grid.Row="1">
+      <views:OnboardingView DataContext="{Binding Onboarding}" IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnboarding, FallbackValue=False}" />
+      <views:HomeView IsVisible="{Binding IsHome}" />
+      <views:SettingsView DataContext="{Binding SettingsPage}" IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsSettings, FallbackValue=False}" />
+    </Panel>
+
+    <!-- ================= Editor overlay ================= -->
+    <Panel Grid.RowSpan="2" IsVisible="{Binding IsEditorOpen}">
+      <Border Background="{DynamicResource Brush.Scrim}" PointerPressed="OnScrimPressed" />
+      <views:InputEditorView DataContext="{Binding Editor}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24" />
+    </Panel>
+  </Grid>
+</Window>

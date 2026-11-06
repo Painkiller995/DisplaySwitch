@@ -1,0 +1,92 @@
+<!--
+  Compact switcher opened from the tray or menu bar icon. It closes when it loses focus or on Escape,
+  like the OS's own flyouts.
+-->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DisplaySwitch.App.ViewModels"
+        xmlns:views="using:DisplaySwitch.App.Views"
+        xmlns:controls="using:DisplaySwitch.App.Controls"
+        xmlns:conv="using:DisplaySwitch.App.Converters"
+        x:Class="DisplaySwitch.App.Views.QuickSwitchWindow"
+        x:DataType="vm:WorkspaceViewModel"
+        Title="DisplaySwitch quick switch"
+        Width="344" SizeToContent="Height"
+        WindowDecorations="None" CanResize="False" ShowInTaskbar="False" Topmost="True"
+        TransparencyLevelHint="Transparent" Background="Transparent">
+  <Window.Styles>
+    <Style Selector="Button.quickRow">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Padding" Value="8" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius.Tile}" />
+    </Style>
+    <Style Selector="Button.quickRow:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource Brush.SurfaceHover}" />
+    </Style>
+    <Style Selector="Button.quickRow Border.iconTile">
+      <Setter Property="Width" Value="36" />
+      <Setter Property="Height" Value="36" />
+      <Setter Property="CornerRadius" Value="10" />
+    </Style>
+    <Style Selector="Button.quickRow.active Border.iconTile">
+      <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextOnAccent}" />
+    </Style>
+  </Window.Styles>
+
+  <!-- Margin leaves room for the shadow inside the transparent window. -->
+  <Border Classes="sheet" Margin="14" Padding="8">
+    <StackPanel Spacing="4">
+      <Grid ColumnDefinitions="*,Auto" Margin="8,4,0,4">
+        <StackPanel VerticalAlignment="Center" Spacing="1">
+          <TextBlock Classes="overline" Text="SWITCH INPUT" />
+          <TextBlock Classes="subtitle" Text="{Binding SelectedMonitor.DisplayName, FallbackValue='No monitor'}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="subtle icon" Click="OnOpenAppClicked" ToolTip.Tip="Open DisplaySwitch" AutomationProperties.Name="Open DisplaySwitch">
+          <controls:Icon Data="{StaticResource Icon.Settings}" />
+        </Button>
+      </Grid>
+
+      <ItemsControl x:Name="Rows" DataContext="{Binding SelectedMonitor}" x:DataType="vm:MonitorViewModel" ItemsSource="{Binding Inputs}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:InputCardViewModel">
+            <Button Classes="quickRow" Classes.active="{Binding IsActive}"
+                    Command="{Binding #Rows.((vm:MonitorViewModel)DataContext).SwitchToCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}"
+                    AutomationProperties.Name="{Binding AccessibleName}">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Classes="iconTile">
+                  <controls:Icon Data="{Binding Icon, Converter={x:Static conv:IconConverters.ForInput}}" Width="18" Height="18" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="1">
+                  <TextBlock Text="{Binding DisplayName}" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Classes="caption" Text="{Binding PortCaption}" IsVisible="{Binding PortCaption, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </StackPanel>
+                <Panel Grid.Column="2" VerticalAlignment="Center">
+                  <controls:Spinner Width="14" Height="14" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding IsSwitching}" />
+                  <controls:Icon Data="{StaticResource Icon.Check}" Width="18" Height="18" Foreground="{DynamicResource Brush.AccentText}" StrokeThickness="2"
+                                 IsVisible="{Binding IsActive}" />
+                  <views:Keycaps ItemsSource="{Binding ShortcutParts}" IsVisible="{Binding !IsActive}" />
+                </Panel>
+              </Grid>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <TextBlock Classes="caption" Margin="8,4,8,8" TextWrapping="Wrap" IsVisible="{Binding !SelectedMonitor.IsControllable, FallbackValue=True}"
+                 Text="{Binding SelectedMonitor.SupportTitle, FallbackValue='No controllable monitor found.'}" />
+
+      <Grid DataContext="{Binding SelectedMonitor.Picture, FallbackValue={x:Null}}" x:DataType="vm:PictureViewModel"
+            ColumnDefinitions="Auto,*,48" Margin="12,4,12,4" IsVisible="{Binding HasBrightness, FallbackValue=False}">
+        <controls:Icon Data="{StaticResource Icon.Brightness}" Width="18" Height="18" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" Margin="0,0,10,0" />
+        <Slider Grid.Column="1" Classes="picture" Maximum="{Binding BrightnessMaximum}" Value="{Binding Brightness}" AutomationProperties.Name="Brightness" />
+        <TextBlock Grid.Column="2" Classes="sliderValue" Text="{Binding BrightnessLabel}" />
+      </Grid>
+
+      <views:FeedbackBanner DataContext="{Binding SelectedMonitor.Feedback}" Margin="0,4,0,0" />
+      <views:FeedbackBanner DataContext="{Binding SelectedMonitor.Picture.Feedback, FallbackValue={x:Null}}" Margin="0,4,0,0" />
+    </StackPanel>
+  </Border>
+</Window>

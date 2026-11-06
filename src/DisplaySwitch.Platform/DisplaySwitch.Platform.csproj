@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DisplaySwitch.Platform</RootNamespace>
+    <!-- Required by the LibraryImport source generator for native interop. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DisplaySwitch.Core\DisplaySwitch.Core.csproj" />
+  </ItemGroup>
+
+</Project>

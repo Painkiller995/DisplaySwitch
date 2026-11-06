@@ -1,0 +1,74 @@
+# ---------------------------------------------------------------------------
+# Build output
+# ---------------------------------------------------------------------------
+bin/
+obj/
+artifacts/
+*.nupkg
+*.snupkg
+
+# Test results, coverage and UI screenshots
+TestResults/
+coverage*/
+*.coverage
+*.coveragexml
+*.trx
+
+# ---------------------------------------------------------------------------
+# Secrets and signing material (store in CI secrets)
+# ---------------------------------------------------------------------------
+*.pfx
+*.p12
+*.snk
+*.pem
+*.key
+*.cer
+*.crt
+*.p8
+*.mobileprovision
+*.provisionprofile
+*.keychain
+*.keychain-db
+.env
+.env.*
+*.secrets.json
+secrets.json
+appsettings.*.local.json
+# Publish profiles can contain credentials
+*.pubxml
+*.pubxml.user
+*.publishsettings
+NuGet.Config.user
+.nuget/
+
+# ---------------------------------------------------------------------------
+# Local app data (settings, logs, crash dumps)
+# ---------------------------------------------------------------------------
+settings.json.corrupt-*
+settings.json.tmp
+*.log
+logs/
+*.dmp
+*.mdmp
+
+# ---------------------------------------------------------------------------
+# Editors, IDEs and OS files
+# ---------------------------------------------------------------------------
+.vs/
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+*.swp
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Local tool state
+.claude/

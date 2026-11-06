@@ -1,0 +1,144 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DisplaySwitch.App.ViewModels"
+             xmlns:controls="using:DisplaySwitch.App.Controls"
+             x:Class="DisplaySwitch.App.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+  <UserControl.Styles>
+    <Style Selector="Grid.row">
+      <Setter Property="Margin" Value="{StaticResource Space.SectionPadding}" />
+      <Setter Property="MinHeight" Value="40" />
+    </Style>
+    <Style Selector="TextBlock.rowTitle">
+      <Setter Property="FontWeight" Value="Medium" />
+    </Style>
+    <Style Selector="ToggleSwitch">
+      <Setter Property="OnContent" Value="" />
+      <Setter Property="OffContent" Value="" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="{StaticResource Space.PagePadding}" MaxWidth="680" Spacing="10">
+      <TextBlock Classes="display" Text="Settings" Margin="0,8,0,14" />
+
+      <!-- ================= Appearance ================= -->
+      <TextBlock Classes="overline" Text="APPEARANCE" Margin="4,8,0,0" />
+      <Border Classes="section">
+        <StackPanel>
+          <Grid Classes="row" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Classes="rowTitle" Text="Theme" />
+              <TextBlock Classes="caption" Text="High-contrast mode is applied automatically when your system uses it." TextWrapping="Wrap" />
+            </StackPanel>
+            <Border Grid.Column="1" Classes="segmented" Margin="16,0,0,0" VerticalAlignment="Center">
+              <StackPanel Orientation="Horizontal" Spacing="2">
+                <RadioButton Classes="segment" GroupName="Theme" Content="System" IsChecked="{Binding IsSystemTheme}" AutomationProperties.Name="Use system theme" />
+                <RadioButton Classes="segment" GroupName="Theme" Content="Light" IsChecked="{Binding IsLightTheme}" AutomationProperties.Name="Light theme" />
+                <RadioButton Classes="segment" GroupName="Theme" Content="Dark" IsChecked="{Binding IsDarkTheme}" AutomationProperties.Name="Dark theme" />
+              </StackPanel>
+            </Border>
+          </Grid>
+          <Border Classes="divider" Margin="20,0" />
+          <Grid Classes="row" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Classes="rowTitle" Text="Reduce motion" />
+              <TextBlock Classes="caption" Text="Turns off hover and switching animations. Also follows your system setting." TextWrapping="Wrap" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding ReduceMotion}" AutomationProperties.Name="Reduce motion" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- ================= Behavior ================= -->
+      <TextBlock Classes="overline" Text="BEHAVIOR" Margin="4,18,0,0" />
+      <Border Classes="section">
+        <StackPanel>
+          <Grid Classes="row" ColumnDefinitions="*,Auto" IsVisible="{Binding AutostartSupported}">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Classes="rowTitle" Text="Start when I sign in" />
+              <TextBlock Classes="caption" Text="DisplaySwitch starts quietly in the tray, so shortcuts work right away." TextWrapping="Wrap" />
+              <TextBlock Text="{Binding AutostartError}" Foreground="{DynamicResource Brush.Danger}" FontSize="{StaticResource Type.Caption}" TextWrapping="Wrap"
+                         IsVisible="{Binding AutostartError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding StartAtSignIn}" AutomationProperties.Name="Start when I sign in" />
+          </Grid>
+          <Border Classes="divider" Margin="20,0" />
+          <Grid Classes="row" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Classes="rowTitle" Text="Keep running when the window is closed" />
+              <TextBlock Classes="caption" Text="Closing the window keeps DisplaySwitch in the tray. Quit from the tray menu." TextWrapping="Wrap" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding CloseToTray}" AutomationProperties.Name="Keep running when the window is closed" />
+          </Grid>
+          <Border Classes="divider" Margin="20,0" />
+          <Grid Classes="row" ColumnDefinitions="Auto,*">
+            <controls:Icon Data="{StaticResource Icon.Keyboard}" Width="20" Height="20" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Top" Margin="0,1,12,0" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Classes="rowTitle" Text="Global shortcuts" />
+              <TextBlock Classes="caption" Text="{Binding ShortcutsSummary}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- ================= Monitor ================= -->
+      <TextBlock Classes="overline" Text="MONITORS" Margin="4,18,0,0" />
+      <Border Classes="section">
+        <StackPanel>
+          <Grid Classes="row" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Classes="rowTitle" Text="Search for monitors again" />
+              <TextBlock Classes="caption" Text="Use this after connecting a monitor or changing its DDC/CI setting. Also re-reads each monitor's capabilities." TextWrapping="Wrap" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="secondary" Margin="16,0,0,0" Command="{Binding RescanCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:Spinner Width="14" Height="14" IsVisible="{Binding Workspace.IsScanning}" />
+                <TextBlock Text="Search" />
+              </StackPanel>
+            </Button>
+          </Grid>
+          <Border Classes="divider" Margin="20,0" IsVisible="{Binding Workspace.HasMonitors}" />
+          <Grid Classes="row" ColumnDefinitions="*,Auto" IsVisible="{Binding Workspace.HasMonitors}">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Classes="rowTitle" Text="Restore detected inputs" />
+              <TextBlock Classes="caption" Text="Removes your names, icons, added inputs and shortcuts for the selected monitor." TextWrapping="Wrap" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="secondary" Margin="16,0,0,0" Content="Restore" Command="{Binding ResetInputsCommand}" />
+          </Grid>
+          <Border Classes="divider" Margin="20,0" IsVisible="{Binding Workspace.HasMonitors}" />
+          <Expander Header="Technical details" Margin="8,4,8,8" IsVisible="{Binding Workspace.HasMonitors}" HorizontalAlignment="Stretch"
+                    Background="Transparent" BorderThickness="0">
+            <StackPanel Spacing="10" Margin="4,0,4,4">
+              <TextBlock Classes="caption" Text="Capabilities reported by the selected monitor (MCCS):" />
+              <SelectableTextBlock Text="{Binding SelectedCapabilities}" FontFamily="Cascadia Mono, Consolas, Menlo, monospace" FontSize="{StaticResource Type.Caption}"
+                                   TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
+            </StackPanel>
+          </Expander>
+        </StackPanel>
+      </Border>
+
+      <!-- ================= About ================= -->
+      <TextBlock Classes="overline" Text="ABOUT" Margin="4,18,0,0" />
+      <Border Classes="section">
+        <Grid Classes="row" ColumnDefinitions="Auto,*,Auto">
+          <Border Width="40" Height="40" CornerRadius="11" Classes="logoBadge" VerticalAlignment="Center">
+            <controls:Icon Data="{StaticResource Icon.Logo}" Width="24" Height="24" Foreground="White" StrokeThickness="1.9" />
+          </Border>
+          <StackPanel Grid.Column="1" Margin="14,0,0,0" Spacing="2" VerticalAlignment="Center">
+            <TextBlock Classes="rowTitle" Text="{Binding Version, StringFormat='DisplaySwitch {0}'}" />
+            <TextBlock Classes="caption" Text="No telemetry. Settings and logs stay on this computer." TextWrapping="Wrap" />
+          </StackPanel>
+          <Button Grid.Column="2" Classes="subtle" Margin="16,0,0,0" Click="OnOpenLogsClicked" AutomationProperties.Name="Open log folder">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:Icon Data="{StaticResource Icon.Folder}" Width="16" Height="16" />
+              <TextBlock Text="Logs" />
+            </StackPanel>
+          </Button>
+        </Grid>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+    # Shipped dependencies: patch release.
+    commit-message:
+      prefix: "fix(deps)"
+    ignore:
+      # Must match the version Avalonia is built against.
+      - dependency-name: SkiaSharp
+        update-types: ["version-update:semver-major"]
+    groups:
+      avalonia:
+        patterns: ["Avalonia*"]
+      test-tools:
+        patterns: ["xunit*", "Microsoft.NET.Test.Sdk"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    # CI only: no release.
+    commit-message:
+      prefix: ci
